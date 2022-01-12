@@ -80,8 +80,8 @@ int main(int argc, char** argv)
         const PetscInt Ni0 = ipx * (nn / NP), Nj0 = ipy * (nn / NP), Nk0 = ipz * (nn / NP);
         const PetscInt Ni1 = Ni0 + (m > 0 ? (nn / NP) : 0), Nj1 = Nj0 + (nn / NP), Nk1 = Nk0 + (nn / NP);
         PetscInt *d_nnz, *o_nnz, osz[4] = {0, 9, 15, 19}, nbc;
-        if (npe != NP * NP * NP) SETERRQ1(PETSC_COMM_WORLD, PETSC_ERR_ARG_WRONG, "npe=%d: npe^{1/3} must be integer", npe);
-        if (nn != NP * (nn / NP)) SETERRQ1(PETSC_COMM_WORLD, PETSC_ERR_ARG_WRONG, "-ne %d: (ne+1)%(npe^{1/3}) must equal zero", ne);
+        if (npe != NP * NP * NP) SETERRQ(PETSC_COMM_WORLD, PETSC_ERR_ARG_WRONG, "npe=%d: npe^{1/3} must be integer", npe);
+        if (nn != NP * (nn / NP)) SETERRQ(PETSC_COMM_WORLD, PETSC_ERR_ARG_WRONG, "-ne %d: (ne+1)%(npe^{1/3}) must equal zero", ne);
         ierr = PetscMalloc1(m + 1, &d_nnz);CHKERRQ(ierr);
         ierr = PetscMalloc1(m + 1, &o_nnz);CHKERRQ(ierr);
         for (i = Ni0, ic = 0; i < Ni1; i++) {
@@ -98,7 +98,7 @@ int main(int argc, char** argv)
                 }
             }
         }
-        if (ic != m) SETERRQ2(PETSC_COMM_SELF, PETSC_ERR_PLIB, "ic %D does not equal m %D", ic, m);
+        if (ic != m) SETERRQ(PETSC_COMM_SELF, PETSC_ERR_PLIB, "ic %D does not equal m %D", ic, m);
         ierr = MatCreate(PETSC_COMM_WORLD, &A);CHKERRQ(ierr);
         ierr = MatSetSizes(A, m, m, M, M);CHKERRQ(ierr);
         ierr = MatSetBlockSize(A, 3);CHKERRQ(ierr);
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
         ierr = PetscFree(d_nnz);CHKERRQ(ierr);
         ierr = PetscFree(o_nnz);CHKERRQ(ierr);
         ierr = MatGetOwnershipRange(A, &Istart, &Iend);CHKERRQ(ierr);
-        if (m != Iend - Istart) SETERRQ3(PETSC_COMM_SELF, PETSC_ERR_PLIB, "m %D does not equal Iend %D - Istart %D", m, Iend, Istart);
+        if (m != Iend - Istart) SETERRQ(PETSC_COMM_SELF, PETSC_ERR_PLIB, "m %D does not equal Iend %D - Istart %D", m, Iend, Istart);
         ierr = VecCreate(PETSC_COMM_WORLD, &x);CHKERRQ(ierr);
         ierr = VecSetSizes(x, m, M);CHKERRQ(ierr);
         ierr = VecSetBlockSize(x, 3);CHKERRQ(ierr);
