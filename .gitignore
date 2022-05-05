@@ -43,6 +43,8 @@
 .fuse*
 .trash
 Makefile.inc
+*.out.*
+*.batch
 
 # Log
 *.aux

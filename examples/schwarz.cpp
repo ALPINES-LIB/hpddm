@@ -76,6 +76,17 @@ int main(int argc, char** argv) {
     std::list<int> o; // at most eight neighbors in 2D
     HPDDM::MatrixCSR<K>* Mat, *MatNeumann = nullptr;
     K* f, *sol;
+    int nvec = 5;
+    int kproj = 6;
+    int lcldof = 10;
+    K* sketched = new K[kproj*nvec];
+    K* tobesketch = new K[lcldof*nvec];
+    HPDDM::SketchMethod<K> sketch(rankWorld, sizeWorld, kproj, lcldof, nvec, 1./kproj);
+    sketch.createsubgrid(10, 10, 10);
+    sketch.allocatesubgrid();
+    sketch.execsubgrid(sketched, tobesketch);
+    delete [] sketched;
+    delete [] tobesketch;
     HPDDM::underlying_type<K>* d = nullptr;
     int ndof;
     generate(rankWorld, sizeWorld, o, mapping, ndof, Mat, MatNeumann, d, f, sol);

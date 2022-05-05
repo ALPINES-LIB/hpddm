@@ -27,6 +27,7 @@
 
 #define HPDDM_GENERATE_EXTERN_LAPACK(C, T, U, SYM, ORT)                                                      \
 void HPDDM_F77(C ## lapmt)(const int*, const int*, const int*, T*, const int*, int*);                        \
+void HPDDM_F77(C ## larnv)(const int*, int*, const int*, T*);                                                \
 U    HPDDM_F77(C ## lange)(const char*, const int*, const int*, const T*, const int*, U*);                   \
 U    HPDDM_F77(C ## lan ## SYM)(const char*, const char*, const int*, const T*, const int*, U*);             \
 void HPDDM_F77(C ## SYM ## gst)(const int*, const char*, const int*, T*, const int*,                         \
@@ -126,6 +127,9 @@ struct Lapack {
     /* Function: lapmt
      *  Performs a forward or backward permutation of the columns of a matrix. */
     static void lapmt(const int*, const int*, const int*, K*, const int*, int*);
+    /* Function: larnv
+     *  Returns a vector of random numbers from a uniform or normal distribution. */
+    static void larnv(const int*, int*, const int*, K*);
     /* Function: lange
      *  Computes the norm of a general rectangular matrix. */
     static underlying_type<K> lange(const char*, const int*, const int*, const K*, const int*, underlying_type<K>*);
@@ -451,6 +455,10 @@ class LapackTR : public DMatrix, public LapackTRSub<K> {
 template<>                                                                                                   \
 inline void Lapack<T>::lapmt(const int* forwrd, const int* m, const int* n, T* x, const int* ldx, int* k) {  \
     HPDDM_F77(C ## lapmt)(forwrd, m, n, x, ldx, k);                                                          \
+}                                                                                                            \
+template<>                                                                                                   \
+inline void Lapack<T>::larnv(const int* idist, int* iseed, const int* n, T* x) {                             \
+    HPDDM_F77(C ## larnv)(idist, iseed, n, x);                                                               \
 }                                                                                                            \
 template<>                                                                                                   \
 inline U Lapack<T>::lange(const char* norm, const int* m, const int* n, const T* a, const int* lda,          \

@@ -319,6 +319,7 @@ inline void hash_range(std::size_t& seed, T begin, T end) {
 # endif
 # ifndef HPDDM_MINIMAL
 #  include "HPDDM_LAPACK.hpp"
+//#  include "HPDDM_sketch.hpp"
 #  if HPDDM_MPI
 #   if HPDDM_SCHWARZ
 #    ifndef EIGENSOLVER
@@ -346,6 +347,7 @@ typedef int MPI_Request;
 #  if !HPDDM_PETSC || defined(_KSPIMPL_H)
 #   include "HPDDM_GCRODR.hpp"
 #   include "HPDDM_CG.hpp"
+#   include "HPDDM_sketch.hpp"
 #  endif
 #  if !HPDDM_MPI
 #   undef MPI_COMM_SELF
@@ -392,6 +394,7 @@ using HpDense = HPDDM::Dense<SUBDOMAIN, COARSEOPERATOR, S, K>;
 #if HPDDM_PETSC
 # ifdef HPDDM_MINIMAL
 #  include "HPDDM_iterative.hpp"
+#  include "HPDDM_sketch.hpp"
 # endif
 # include "HPDDM_PETSc.hpp"
 #endif
