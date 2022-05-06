@@ -45,6 +45,7 @@
 Makefile.inc
 *.out.*
 *.batch
+.vscode/
 
 # Log
 *.aux

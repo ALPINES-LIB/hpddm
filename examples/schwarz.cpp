@@ -76,15 +76,26 @@ int main(int argc, char** argv) {
     std::list<int> o; // at most eight neighbors in 2D
     HPDDM::MatrixCSR<K>* Mat, *MatNeumann = nullptr;
     K* f, *sol;
-    int nvec = 5;
-    int kproj = 6;
-    int lcldof = 10;
+    int nvec = 2;
+    int kproj = 4;
+    int lcldof = 6;
     K* sketched = new K[kproj*nvec];
     K* tobesketch = new K[lcldof*nvec];
-    HPDDM::SketchMethod<K> sketch(rankWorld, sizeWorld, kproj, lcldof, nvec, 1./kproj);
-    sketch.createsubgrid(10, 10, 10);
+    std::fill_n(sketched, kproj*nvec, 0.0);
+    srand(456734);
+    for (int i = 0; i < lcldof*nvec; ++i)tobesketch[i] = (K)std::rand()/RAND_MAX;
+    //std::fill_n(tobesketch, lcldof*nvec, 1.0);
+    HPDDM::SketchMethod<K> sketch(rankWorld, sizeWorld, kproj, lcldof, nvec, 1./std::sqrt(kproj));
+    sketch.createsubgrid(2, 3, 2);
     sketch.allocatesubgrid();
     sketch.execsubgrid(sketched, tobesketch);
+    std::cout << "sketched::" << std::endl;
+    for (int i = 0; i < kproj; ++i){
+        for (int j = 0; j < nvec; ++j){
+            std::cout << sketched[j*kproj+i] << " ";
+        }
+        std::cout << std::endl;
+    }
     delete [] sketched;
     delete [] tobesketch;
     HPDDM::underlying_type<K>* d = nullptr;
